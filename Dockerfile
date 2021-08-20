@@ -1,31 +1,39 @@
-##
-## Build
-##
+# syntax=docker/dockerfile:1
+FROM busybox
+CMD echo "Hello world! This is my first Docker image."
 
-FROM golang:1.16-buster AS build
 
-WORKDIR /app
 
-COPY go.mod ./
-COPY go.sum ./
-RUN go mod download
 
-COPY *.go ./
 
-RUN go build -o /docker-gs-ping
+# ##
+# ## Build
+# ##
 
-##
-## Deploy
-##
+# FROM golang:1.16-buster AS build
 
-FROM restreamio/gstreamer:1.18.4.0-prod
+# WORKDIR /app
 
-WORKDIR /
+# COPY go.mod ./
+# COPY go.sum ./
+# RUN go mod download
 
-COPY --from=build /docker-gs-ping /docker-gs-ping
+# COPY *.go ./
 
-EXPOSE 8080
+# RUN go build -o /docker-gs-ping
 
-#USER nonroot:nonroot
+# ##
+# ## Deploy
+# ##
 
-ENTRYPOINT ["/docker-gs-ping"]
+# FROM restreamio/gstreamer:1.18.4.0-prod
+
+# WORKDIR /
+
+# COPY --from=build /docker-gs-ping /docker-gs-ping
+
+# EXPOSE 8080
+
+# #USER nonroot:nonroot
+
+# ENTRYPOINT ["/docker-gs-ping"]
