@@ -1,4 +1,4 @@
-# avoid gh actions syntax
+# I try to minimize gh actions usage!
 
 on: [push]
 
