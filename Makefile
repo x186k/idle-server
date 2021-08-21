@@ -19,7 +19,8 @@ run: build
 test: build 
 	docker run -v ${PWD}:/foo x186k/idle-server /foo/idle-media.mov /foo/idle-clip.zip
 
-
+test-deadsfu: build
+	docker run -v ~/Documents/deadsfu/deadsfu-binaries:/foo x186k/idle-server /foo/idle-clip.mov /foo/idle-clip.zip
 
 
 serve: build
@@ -27,5 +28,6 @@ serve: build
 
 serve-curl:
 	curl -X POST --data-binary @idle-media http://localhost:8088/idle-clip --output idle-clip.zip
+
 
 

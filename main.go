@@ -178,11 +178,6 @@ func runGstreamer(infile string) ([]byte, error) {
 		base := fmt.Sprintf("rtp%d.rtp", i)
 		fullname := path.Join(outdir, base)
 
-		f, err := w.Create(base)
-		if err != nil {
-			return nil, fmt.Errorf("w.Create() %w", err)
-		}
-
 		pktbody, err := ioutil.ReadFile(fullname)
 		if errors.Is(err, os.ErrNotExist) {
 			log.Println(fullname, "not found")
@@ -192,12 +187,17 @@ func runGstreamer(infile string) ([]byte, error) {
 			return nil, fmt.Errorf("ioutil.ReadFile(...) %w", err)
 		}
 
+		f, err := w.Create(base)
+		if err != nil {
+			return nil, fmt.Errorf("w.Create() %w", err)
+		}
+
 		_, err = f.Write(pktbody)
 		if err != nil {
 			return nil, fmt.Errorf("f.Write(pktbody) %w", err)
 		}
 	}
-
+	
 	w.Close() //important
 
 	log.Println(i, "packets zipped up")
