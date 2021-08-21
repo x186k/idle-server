@@ -4,7 +4,7 @@ all: build
 
 
 
-build:
+build: main.go go.mod go.sum
 	docker build -t x186k/idle-server .
 
 
