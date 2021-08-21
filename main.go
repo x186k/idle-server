@@ -47,20 +47,27 @@ func Exists(name string) bool {
 func main() {
 	var err error
 
-	input := pflag.String("input", "", "input file")
-
 	pflag.Parse()
 
-	if *input != "" {
-		if !Exists(*input) {
+	httpmode := false
+	if len(pflag.Args()) == 0 {
+		httpmode = true
+		println("http server on 8080")
+	} else if len(pflag.Args()) == 2 {
+		httpmode = false
+	} else {
+		checkFatal(fmt.Errorf("no argments for http, or two args: infile,outfile for file mode"))
+	}
+
+	if !httpmode {
+		infile := pflag.Args()[0]
+		outfile := pflag.Args()[1]
+		if !Exists(infile) {
 			checkFatal(fmt.Errorf("input file does not exist"))
 		}
 
-		zipbuf, err := runGstreamer(*input)
+		zipbuf, err := runGstreamer(infile)
 		checkFatal(err)
-
-		//ext := path.Ext(*input)
-		outfile := "idle-clip.zip"
 
 		err = ioutil.WriteFile(outfile, zipbuf, 0666)
 		checkFatal(err)
