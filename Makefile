@@ -17,4 +17,8 @@ run: build
 
 
 test: build 
-	docker run -v ${PWD}:/foo x186k/idle-server
+	docker run -v ${PWD}:/foo x186k/idle-server --input /foo/idle-media
+
+
+serve: build
+	docker run -p 8080:8080 x186k/idle-server
