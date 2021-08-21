@@ -168,14 +168,17 @@ func runGstreamer(infile string) ([]byte, error) {
 	i := 0
 	for ; i < 1000000; i++ {
 
-		name := path.Join(outdir, fmt.Sprintf("rtp%d.rtp", i))
+		base := fmt.Sprintf("rtp%d.rtp", i)
+		fullname := path.Join(outdir, base)
 
-		f, err := w.Create(filepath.Base(name))
+		f, err := w.Create(base)
 		if err != nil {
 			return nil, fmt.Errorf("w.Create() %w", err)
 		}
-		pktbody, err := ioutil.ReadFile(path.Join(outdir, name))
+
+		pktbody, err := ioutil.ReadFile(fullname)
 		if errors.Is(err, os.ErrNotExist) {
+			log.Println(fullname, "not found")
 			break
 		}
 		if err != nil {
