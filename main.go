@@ -80,7 +80,7 @@ func main() {
 
 	log.Println("No --input flag, waiting for http requests")
 
-	http.HandleFunc("/convert", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/idle-clip", func(w http.ResponseWriter, r *http.Request) {
 
 		if r.Method != "POST" {
 			httpError(fmt.Errorf("http POST ONLY"), w)
