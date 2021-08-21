@@ -25,7 +25,7 @@ test: build
 serve: build
 	docker run -p 8080:8080 x186k/idle-server
 
-serve-curl: build
+serve-curl:
 	curl -X POST --data-binary @idle-media http://localhost:8080/convert --output idle-clip.zip
 
 
