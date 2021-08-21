@@ -17,7 +17,7 @@ run: build
 
 
 test: build 
-	docker run -v ${PWD}:/foo x186k/idle-server --input /foo/idle-media
+	docker run -v ${PWD}:/foo x186k/idle-server /foo/idle-media.mov /foo/idle-clip.zip
 
 
 
