@@ -58,8 +58,8 @@ func main() {
 		zipbuf, err := runGstreamer(*input)
 		checkFatal(err)
 
-		ext := path.Ext(*input)
-		outfile := (*input)[0:len(*input)-len(ext)] + ".zip"
+		//ext := path.Ext(*input)
+		outfile := "idle-clip.zip"
 
 		err = ioutil.WriteFile(outfile, zipbuf, 0666)
 		checkFatal(err)
@@ -110,14 +110,14 @@ func main() {
 		}
 
 		w.Header().Set("Content-Type", "application/zip")
-		w.Header().Set("Content-Disposition", "attachment; filename='idle-media.zip'")
+		w.Header().Set("Content-Disposition", "attachment; filename='idle-clip.zip'")
 
 		n, err = w.Write(zipbuf)
 		if err != nil {
 			httpError(err, w)
 			return
 		}
-	
+
 		if n != len(zipbuf) {
 			httpError(fmt.Errorf("bad resp write len"), w)
 			return
