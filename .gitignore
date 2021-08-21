@@ -15,3 +15,4 @@
 # vendor/
 idle-server
 /out.nosync
+*.zip
