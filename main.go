@@ -3,6 +3,7 @@ package main
 import (
 	"archive/zip"
 	"bytes"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -35,7 +36,7 @@ func checkFatal(err error) {
 
 func Exists(name string) bool {
 	if _, err := os.Stat(name); err != nil {
-		if os.IsNotExist(err) {
+		if errors.Is(err, os.ErrNotExist) {
 			return false
 		}
 		checkFatal(err)
@@ -155,21 +156,28 @@ func runGstreamer(infile string) ([]byte, error) {
 
 	log.Printf("Command err code: %v", err)
 
-	rtpfiles, err := ioutil.ReadDir(outdir)
-	if err != nil {
-		return nil, fmt.Errorf("ioutil.ReadDir(outdir) %w", err)
-	}
+	// rtpfiles, err := ioutil.ReadDir(outdir)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("ioutil.ReadDir(outdir) %w", err)
+	// }
 
 	buf := new(bytes.Buffer)
 
 	w := zip.NewWriter(buf)
 
-	for _, file := range rtpfiles {
-		f, err := w.Create(filepath.Base(file.Name()))
+	i := 0
+	for ; i < 1000000; i++ {
+
+		name := path.Join(outdir, fmt.Sprintf("rtp%d.rtp", i))
+
+		f, err := w.Create(filepath.Base(name))
 		if err != nil {
 			return nil, fmt.Errorf("w.Create() %w", err)
 		}
-		pktbody, err := ioutil.ReadFile(path.Join(outdir, file.Name()))
+		pktbody, err := ioutil.ReadFile(path.Join(outdir, name))
+		if errors.Is(err, os.ErrNotExist) {
+			break
+		}
 		if err != nil {
 			return nil, fmt.Errorf("ioutil.ReadFile(...) %w", err)
 		}
@@ -182,7 +190,7 @@ func runGstreamer(infile string) ([]byte, error) {
 
 	w.Close() //important
 
-	log.Println(len(rtpfiles), "packets zipped up")
+	log.Println(i, "packets zipped up")
 
 	return buf.Bytes(), nil
 }
