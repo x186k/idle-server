@@ -1,11 +1,12 @@
 all: build
-	docker push x186k/idle-server
+
 
 
 
 
 build: main.go go.mod go.sum
 	docker build -t x186k/idle-server .
+	docker push x186k/idle-server
 
 
 
