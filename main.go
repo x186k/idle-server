@@ -24,7 +24,7 @@ videoconvert !
 x264enc option-string=slice-max-size=1200 speed-preset=medium tune=zerolatency key-int-max=1 !
 video/x-h264,profile=constrained-baseline !
 queue max-size-time=100000000 !
-rtph264pay config-interval=-1 name=payloader !
+rtph264pay config-interval=1 name=payloader !
 multifilesink location="%s"`
 
 func checkFatal(err error) {
@@ -43,6 +43,8 @@ func Exists(name string) bool {
 	}
 	return true
 }
+
+var hostport = pflag.String("hostport", ":8088", "addr:port to bind and listen for http")
 
 func main() {
 	var err error
@@ -133,7 +135,7 @@ func main() {
 
 	})
 
-	err = http.ListenAndServe(":8080", nil)
+	err = http.ListenAndServe(*hostport, nil)
 	checkFatal(err)
 
 }
@@ -151,7 +153,9 @@ func runGstreamer(infile string) ([]byte, error) {
 	defer os.RemoveAll(outdir)
 
 	var gstcmd = fmt.Sprintf(gstformat, infile, outdir+"/rtp%d.rtp")
+
 	log.Printf("Running command2")
+
 	args := strings.Fields(gstcmd)
 	cmd := exec.Command(args[0], args[1:]...)
 	stdoutStderr, err := cmd.CombinedOutput()
@@ -197,7 +201,7 @@ func runGstreamer(infile string) ([]byte, error) {
 			return nil, fmt.Errorf("f.Write(pktbody) %w", err)
 		}
 	}
-	
+
 	w.Close() //important
 
 	log.Println(i, "packets zipped up")
