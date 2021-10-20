@@ -18,7 +18,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
-var gstformat = `/usr/bin/gst-launch-1.0 filesrc location="%s" !
+var gstformat = `gst-launch-1.0 filesrc location="%s" !
 decodebin name=decode !
 videoconvert !
 x264enc option-string=slice-max-size=1200 speed-preset=medium tune=zerolatency key-int-max=1 !
